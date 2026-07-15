@@ -256,43 +256,6 @@ CyberShield-AI/
     └── data/event_log.jsonl (append-only log of processed events)
 ```
 
----
-
-## 🎓 Key Architectural Decisions (Don't Remove These!)
-
-### ❌ **DO NOT** Let Copilot / AI Assistants Merge Module Utils Files
-Each module has its own `utils.py` by design (see "Subprocess Isolation Pattern" above). Merging them will **silently reintroduce the namespace collision bug** and corrupt Module 1's core predictions.
-
-### ✅ **DO** Keep the Subprocess Bridge Pattern
-All cross-module calls go through isolated subprocesses for data safety and reproducibility.
-
-### ✅ **DO** Keep Redundant Gating on `final_risk_probability > 70`
-Module 4's LLM is gated at **two levels** (in `main.py` AND inside `generate_response_playbook()` itself). This redundancy is intentional — means the gate can't be bypassed by a future caller forgetting to check first.
-
-### ✅ **DO** Keep Deterministic Templated Rules (Not LLM-Generated)
-YARA/Snort/Sigma rules, CVE suggestions, and all hardened commands are curated in `threat_intel.py` — never free-form LLM output. A hallucinated CVE ID or syntactically broken detection rule is actively worse than none.
-
----
-
-## 🏆 Ready for Hackathon Judges
-
-**Checklist before presentation:**
-
-- [x] All 4 modules train independently
-- [x] Cross-module integration tested (subprocess bridges verified)
-- [x] Streamlit dashboard code verified to execute (but **open in browser yourself once**)
-- [x] Module 4 LLM path gating verified (**test with real key before demo day**)
-- [x] Public contracts (function names) stable and documented
-- [x] All evaluation metrics saved and reported
-- [x] Honest limitations documented (rolling features caveat, synthetic data, no live LLM test yet)
-
-**Still needed for demo day:**
-1. Open the Streamlit dashboard in a browser at least once
-2. Test Module 4's playbook generation with a real Anthropic API key (if demoing live LLM)
-3. Walk judges through the metrics and honest design decisions in the module READMEs
-
----
-
 ## 📚 Deep Dives
 
 For detailed documentation on each module:
