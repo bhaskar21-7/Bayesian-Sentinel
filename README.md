@@ -116,6 +116,10 @@ should be assumed.
 ### Prerequisites
 - Python 3.8+
 - pip
+- **Windows users:** `demo.sh` is a bash script and will not run in `cmd.exe`
+  or plain PowerShell. Run it from **WSL** or **Git Bash**, or follow the
+  Manual Setup steps below directly in PowerShell/cmd (they're plain
+  `python`/`pip` commands and don't need bash).
 
 ### One-Command Setup & Demo
 
