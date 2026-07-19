@@ -94,12 +94,12 @@ context to one module at a time.
   `ValueError` if violated). This redundancy is intentional so the gate
   can't be silently bypassed by a future caller. Keep both checks if you
   refactor.
-- **No live LLM call was ever tested** — no `ANTHROPIC_API_KEY` was
+- **No live LLM call was ever tested** — no `GEMINI_API_KEY` was
   available during development. Everything except the actual live API
-  round-trip was verified (mock mode, missing-key error path, SDK
-  response-parsing logic against a simulated response). **Test this for
-  real, with a real key, before demo day** — it's the one path in the
-  whole project that's unverified.
+  round-trip was verified (mock mode, missing-key error path, REST
+  response-parsing logic against the real Gemini response shape). **Test this
+  for real, with a real key from https://aistudio.google.com/apikey, before
+  demo day** — it's the one path in the whole project that's unverified.
 
 ## Known, documented limitations (already written up, not hidden)
 

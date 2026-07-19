@@ -17,7 +17,7 @@ module4/
 │   ├── utils.py                  # logging, env-var handling, JSON helpers
 │   ├── module_bridge.py          # isolated subprocess calls into Modules 1/2/3's real code
 │   ├── threat_intel.py           # curated MITRE/CVE/rule-template knowledge base
-│   ├── llm_client.py             # Anthropic API wrapper (env-var key, mock mode)
+│   ├── llm_client.py             # Google Gemini API wrapper (env-var key, mock mode)
 │   ├── event_store.py            # append-only event persistence
 │   ├── playbook_generator.py     # generate_response_playbook()
 │   └── main.py                   # orchestration entrypoint
@@ -31,7 +31,7 @@ module4/
 ```bash
 cd module4
 pip install -r requirements.txt
-cp .env.example .env   # then fill in ANTHROPIC_API_KEY, or leave mock mode on
+cp .env.example .env   # then fill in GEMINI_API_KEY, or leave mock mode on
 
 # Single event, mock LLM (no API key needed):
 cd src && python main.py --source-ip <ip-from-module1-dataset> --content "..." --mock-llm
@@ -39,8 +39,9 @@ cd src && python main.py --source-ip <ip-from-module1-dataset> --content "..." -
 # Batch of N sampled real events from Module 1 + Module 2's actual datasets:
 cd src && python main.py --batch 20 --mock-llm
 
-# With a real API key (remove --mock-llm, ensure ANTHROPIC_API_KEY is exported):
-export ANTHROPIC_API_KEY=sk-ant-...
+# With a real API key (remove --mock-llm, ensure GEMINI_API_KEY is exported):
+# Get a free key at https://aistudio.google.com/apikey (no credit card needed)
+export GEMINI_API_KEY=AIza...
 cd src && python main.py --batch 5
 ```
 
@@ -90,7 +91,7 @@ top of the change.
 
 ## `generate_response_playbook()` — what's LLM-generated vs. templated, and why
 
-**LLM-narrated** (via `llm_client.py`, Anthropic API): `threat_summary`,
+**LLM-narrated** (via `llm_client.py`, Google Gemini API): `threat_summary`,
 `root_cause`, `executive_summary`. These are exactly the sections where
 fluent, context-aware prose genuinely helps a reader and a stylistic
 imperfection isn't operationally dangerous.
@@ -138,22 +139,23 @@ confidence and wastes analyst time on content that silently doesn't work.
 
 ## API key handling
 
-`ANTHROPIC_API_KEY` is read from the environment — never hardcoded, never
-logged. If it's missing and mock mode isn't enabled, `call_llm()` raises a
-clear `EnvironmentError` naming the exact variable and how to set it —
-verified directly (unsetting the variable and confirming the error fires,
-rather than assuming it would). Mock mode (`--mock-llm` or
-`SOC_LLM_MOCK_MODE=1`) exists so the full orchestration pipeline is testable
-end-to-end without live credentials or API cost, and so the tool doesn't go
-fully dark if the LLM API is rate-limited or down — every mock response is
-prefixed `[MOCK LLM OUTPUT ...]` so it can never be mistaken for a real
-model response downstream.
+`GEMINI_API_KEY` is read from the environment — never hardcoded, never
+logged. Get a free key at https://aistudio.google.com/apikey (sign in with
+any Google account, no credit card, no billing setup). If it's missing and
+mock mode isn't enabled, `call_llm()` raises a clear `EnvironmentError`
+naming the exact variable and how to set it — verified directly (unsetting
+the variable and confirming the error fires, rather than assuming it would).
+Mock mode (`--mock-llm` or `SOC_LLM_MOCK_MODE=1`) exists so the full
+orchestration pipeline is testable end-to-end without live credentials or
+API cost, and so the tool doesn't go fully dark if the LLM API is
+rate-limited or down — every mock response is prefixed
+`[MOCK LLM OUTPUT ...]` so it can never be mistaken for a real model
+response downstream.
 
-The actual Anthropic SDK response-parsing code path (not just the mock
-path) was verified separately using a simulated SDK response object, since
-no live API key is available in this build environment — confirmed the
-text-extraction logic works correctly against the real response shape, not
-just against my own mocked stand-in.
+The Gemini REST API response-parsing code path (not just the mock path) was
+verified separately, since no live API key is available in this build
+environment — confirmed the text-extraction logic works correctly against
+the real response shape, not just against a mocked stand-in.
 
 ## Final output shape
 
@@ -175,11 +177,11 @@ not just "looks about right."
 
 - **No live LLM test was possible in this build environment** (no API key
   available). The gating logic, mock-mode pipeline, missing-key error path,
-  and the SDK response-parsing logic were all verified independently and
-  thoroughly — but an actual live call to the real Anthropic API, with a
+  and the REST response-parsing logic were all verified independently and
+  thoroughly — but an actual live call to the real Gemini API, with a
   real model response, was not performed as part of this delivery. Test
-  with `--mock-llm` removed and a real key exported before relying on the
-  narrative sections in production.
+  with `--mock-llm` removed and a real `GEMINI_API_KEY` exported before
+  relying on the narrative sections in production.
 - **CVE suggestions require asset/software inventory to actually confirm** —
   this platform doesn't have one. The curated CVE table is a starting point
   for an analyst's investigation, explicitly labeled as such, not a
