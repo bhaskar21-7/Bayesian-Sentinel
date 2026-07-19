@@ -241,7 +241,7 @@ SHAP has no native support for OneClassSVM and partial/version-fragile support f
 
 ✅ **Streamlit dashboard** both smoke-tested by direct Python execution AND launched as real headless server returning HTTP 200
 
-❌ **Live LLM API calls** (no `ANTHROPIC_API_KEY` available in build environment — test this yourself with real key before demo day)
+❌ **Live LLM API calls** (no `GEMINI_API_KEY` available in build environment — test this yourself with real key before demo day)
 
 ❌ **Streamlit dashboard in actual browser** (only verified programmatically — open it at least once before presenting)
 
@@ -264,10 +264,11 @@ cd module4/src && python main.py --batch 5 --mock-llm
 ```bash
 # Option 1: Copy .env.example to .env and fill in your key
 cp module4/.env.example module4/.env
-export ANTHROPIC_API_KEY=sk-ant-...
+# Get a free key at https://aistudio.google.com/apikey (no credit card needed)
+export GEMINI_API_KEY=AIza...
 
 # Option 2: Set directly in shell
-export ANTHROPIC_API_KEY=sk-ant-...
+export GEMINI_API_KEY=AIza...
 export SOC_LLM_MOCK_MODE=1  # for development/testing
 
 # Option 3: Always use mock mode (no API key needed)
@@ -345,7 +346,7 @@ CyberShield-AI/
     │   ├── main.py                    # Orchestration entrypoint
     │   ├── playbook_generator.py      # generate_response_playbook()
     │   ├── threat_intel.py            # Curated rules + CVE/MITRE mapping
-    │   ├── llm_client.py              # Anthropic API wrapper (mock mode included)
+    │   ├── llm_client.py              # Google Gemini API wrapper (mock mode included)
     │   ├── module_bridge.py           # Isolated subprocess calls
     │   ├── event_store.py             # Append-only event log
     │   └── utils.py
@@ -370,7 +371,7 @@ This platform was built for the **Maverick Effect AI Challenge 2026** as a demon
 - scikit-learn, LightGBM, XGBoost (ML)
 - SHAP, LIME (Explainability)
 - Streamlit, Plotly (Dashboard)
-- Anthropic SDK (LLM)
+- Google Gemini API (LLM, free tier)
 
 ---
 

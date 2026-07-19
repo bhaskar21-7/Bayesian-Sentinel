@@ -41,7 +41,7 @@ A modern, responsive landing page for the CyberShield AI cybersecurity platform 
   - Machine Learning (scikit-learn, LightGBM, XGBoost, IsolationForest)
   - Explainability (SHAP, LIME, Permutation Importance)
   - Dashboard & Visualization (Streamlit, Plotly, Pandas, NumPy)
-  - LLM & Automation (Anthropic Claude, Playbook Generation)
+  - LLM & Automation (Google Gemini, Playbook Generation)
 - **Interactive tech items** with hover effects
 - **Category cards** with fade-in animations
 

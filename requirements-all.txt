@@ -25,8 +25,8 @@ matplotlib==3.11.1
 # Dashboard
 streamlit==1.59.2
 
-# LLM Integration
-anthropic==0.117.0
+# LLM Integration (Google Gemini — free tier, no credit card, via plain HTTP)
+requests==2.34.2
 
 # Utilities
 joblib==1.5.3
