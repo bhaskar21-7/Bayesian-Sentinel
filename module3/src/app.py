@@ -78,7 +78,7 @@ ATTACK_CATEGORY_COLORS = {
 # ============================================================================
 
 st.set_page_config(
-    page_title="CyberShield SOC Dashboard",
+    page_title="Bayesian Sentinel SOC Dashboard",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -282,7 +282,7 @@ with st.container():
     
     with col_nav1:
         st.markdown(
-            f"<div class='soc-title'>🛡️ CyberShield SOC</div>",
+            f"<div class='soc-title'>🛡️ Bayesian Sentinel SOC</div>",
             unsafe_allow_html=True,
         )
     
@@ -704,7 +704,7 @@ st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 st.markdown(
     """
     <div style='text-align: center; color: #8b949e; font-size: 11px; margin-top: 40px;'>
-        <p>CyberShield SOC Dashboard | Last Updated: <span id='update-time'></span> UTC</p>
+        <p>Bayesian Sentinel SOC Dashboard | Last Updated: <span id='update-time'></span> UTC</p>
         <p>🔐 All data encrypted in transit | 🛡️ Multi-factor authentication enabled</p>
         <script>
             document.getElementById('update-time').textContent = new Date().toISOString();

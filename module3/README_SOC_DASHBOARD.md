@@ -1,8 +1,8 @@
-# CyberShield SOC Dashboard — Professional Redesign
+# Bayesian Sentinel SOC Dashboard — Professional Redesign
 
 ## Overview
 
-The CyberShield Module 3 dashboard has been completely redesigned as a **professional Security Operations Center (SOC) interface** with enterprise-grade UX/UI, modern glassmorphism design, and SIEM-style threat monitoring capabilities.
+The Bayesian Sentinel Module 3 dashboard has been completely redesigned as a **professional Security Operations Center (SOC) interface** with enterprise-grade UX/UI, modern glassmorphism design, and SIEM-style threat monitoring capabilities.
 
 ## Design Principles
 
@@ -35,7 +35,7 @@ The CyberShield Module 3 dashboard has been completely redesigned as a **profess
 
 ### Top Navigation Bar
 ```
-[🛡️ CyberShield SOC] | [Current Time] | [System Status] | [Threat Level] | [Model Status]
+[🛡️ Bayesian Sentinel SOC] | [Current Time] | [System Status] | [Threat Level] | [Model Status]
 ```
 - Fixed height, glassmorphic background
 - Real-time updates

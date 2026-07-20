@@ -1,7 +1,7 @@
 """
 threat_intelligence.py
 ======================
-Comprehensive Threat Intelligence Dashboard for CyberShield SOC
+Comprehensive Threat Intelligence Dashboard for Bayesian Sentinel SOC
 
 Features:
   - Top CVEs with CVSS scores
@@ -1166,7 +1166,7 @@ with tab6:
 st.divider()
 st.markdown(
     "<div style='text-align: center; color: #8b949e; font-size: 12px; padding: 20px;'>"
-    "🔴 CyberShield AI - Threat Intelligence Hub | Last Updated: 2024-07-15 10:30 UTC"
+    "🔴 Bayesian Sentinel - Threat Intelligence Hub | Last Updated: 2024-07-15 10:30 UTC"
     "</div>",
     unsafe_allow_html=True,
 )

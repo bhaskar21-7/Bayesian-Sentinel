@@ -145,10 +145,10 @@ class UserInteractionTracker {
 const tracker = new UserInteractionTracker();
 
 // Provide developer access to tracking data
-window.getCyberShieldInteractions = () => {
+window.getBayesianSentinelInteractions = () => {
     return tracker.getInteractions();
 };
 
-console.log('%c🛡️ CyberShield AI - Landing Page', 'color: #00D9FF; font-size: 16px; font-weight: bold;');
+console.log('%c🛡️ Bayesian Sentinel - Landing Page', 'color: #00D9FF; font-size: 16px; font-weight: bold;');
 console.log('%cInteractive elements initialized', 'color: #8b949e; font-size: 12px;');
-console.log('%cTip: Use getCyberShieldInteractions() to see user interactions', 'color: #00D9FF; font-size: 12px;');
+console.log('%cTip: Use getBayesianSentinelInteractions() to see user interactions', 'color: #00D9FF; font-size: 12px;');

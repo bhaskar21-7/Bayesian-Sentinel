@@ -1,4 +1,4 @@
-# CyberShield AI — Unified Dependencies
+# Bayesian Sentinel — Unified Dependencies
 # Install all modules at once: pip install -r requirements-all.txt
 #
 # Versions pinned to what was actually clean-room tested end-to-end

@@ -1,4 +1,4 @@
-# CyberShield AI — Explainable AI-Powered Cybersecurity Threat Detection
+# Bayesian Sentinel — Explainable AI-Powered Cybersecurity Threat Detection Platform
 
 SOC analysts don't usually miss a real attack because no tool saw it — they
 miss it because ten tools each saw a fragment of it, on separate dashboards,
@@ -10,7 +10,7 @@ entirely in the noise — the classic alert-fatigue trap, where real signal
 and false positives arrive at the same volume and get the same amount of
 attention.
 
-CyberShield AI fuses network-behavioral and content-based signals through
+Bayesian Sentinel fuses network-behavioral and content-based signals through
 genuine Bayesian evidence combination (posterior odds = prior odds ×
 likelihood ratio in log-odds space — not a weighted average dressed up as
 "Bayesian"), explains its reasoning via SHAP/LIME so an analyst can see
@@ -125,8 +125,8 @@ should be assumed.
 
 ```bash
 # Clone and enter the repo
-git clone https://github.com/bhaskar21-7/CyberShield-AI
-cd CyberShield-AI
+git clone https://github.com/bhaskar21-7/Bayesian-Sentinel
+cd Bayesian-Sentinel
 
 # Run the all-in-one demo (trains all modules, runs orchestrator, generates playbook)
 bash demo.sh --mock-llm
@@ -282,7 +282,7 @@ When mock mode is on, all LLM output is prefixed `[MOCK LLM OUTPUT ...]` so it c
 ## 📁 Repository Structure
 
 ```
-CyberShield-AI/
+Bayesian-Sentinel/
 ├── README.md                          # ← You are here
 ├── demo.sh                            # One-command setup & orchestration
 ├── requirements-all.txt               # Unified dependency file

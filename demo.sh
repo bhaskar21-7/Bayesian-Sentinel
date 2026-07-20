@@ -1,5 +1,5 @@
 #!/bin/bash
-# CyberShield AI — All-in-One Demo Script
+# Bayesian Sentinel — All-in-One Demo Script
 # Usage: bash demo.sh [--mock-llm]
 #
 # This script orchestrates the complete pipeline:

@@ -1,6 +1,6 @@
-# CyberShield AI - Landing Page
+# Bayesian Sentinel - Landing Page
 
-A modern, responsive landing page for the CyberShield AI cybersecurity platform with stunning animations, interactive elements, and professional design.
+A modern, responsive landing page for the Bayesian Sentinel cybersecurity platform with stunning animations, interactive elements, and professional design.
 
 ## ✨ Features
 
@@ -226,7 +226,7 @@ The landing page includes a built-in interaction tracker. Access it via:
 
 ```javascript
 // In browser console
-getCyberShieldInteractions();
+getBayesianSentinelInteractions();
 // Returns array of all user interactions
 ```
 
@@ -257,7 +257,7 @@ Open browser console to see:
 
 ## 📝 License
 
-Part of CyberShield AI platform. Built with ❤️ for explainable, production-quality AI in cybersecurity.
+Part of Bayesian Sentinel platform. Built with ❤️ for explainable, production-quality AI in cybersecurity.
 
 ## 🚀 Deployment
 
@@ -284,11 +284,11 @@ sudo cp -r landing/* /var/www/html/
 ## 📞 Support
 
 For issues or questions:
-- GitHub Issues: https://github.com/gunjit007/CyberShield-AI/issues
-- Discussions: https://github.com/gunjit007/CyberShield-AI/discussions
+- GitHub Issues: https://github.com/bhaskar21-7/Bayesian-Sentinel/issues
+- Discussions: https://github.com/bhaskar21-7/Bayesian-Sentinel/discussions
 
 ---
 
 **Last Updated**: 2026-07-15
 
-🛡️ **CyberShield AI** - Explainable Cybersecurity Threat Detection
+🛡️ **Bayesian Sentinel** - Explainable Cybersecurity Threat Detection

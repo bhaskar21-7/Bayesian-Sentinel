@@ -1,6 +1,6 @@
-# CyberShield AI - Threat Intelligence Dashboard
+# Bayesian Sentinel - Threat Intelligence Dashboard
 
-A comprehensive threat intelligence dashboard for the CyberShield SOC platform with real-time CVE tracking, malware analysis, threat actor monitoring, and global attack visualization.
+A comprehensive threat intelligence dashboard for the Bayesian Sentinel SOC platform with real-time CVE tracking, malware analysis, threat actor monitoring, and global attack visualization.
 
 ## 🎯 Features
 
@@ -390,7 +390,7 @@ CMD ["streamlit", "run", "threat_intelligence.py"]
 
 ## 🤝 Integration Points
 
-### With CyberShield Modules
+### With Bayesian Sentinel Modules
 - **Module 1**: Network anomalies → Attack origins
 - **Module 2**: Phishing threats → Malware association
 - **Module 3**: Dashboard → Threat visualization
@@ -405,11 +405,11 @@ CMD ["streamlit", "run", "threat_intelligence.py"]
 ## 📞 Support
 
 For issues or feature requests:
-- GitHub Issues: https://github.com/gunjit007/CyberShield-AI/issues
-- Discussions: https://github.com/gunjit007/CyberShield-AI/discussions
+- GitHub Issues: https://github.com/bhaskar21-7/Bayesian-Sentinel/issues
+- Discussions: https://github.com/bhaskar21-7/Bayesian-Sentinel/discussions
 
 ---
 
 **Last Updated**: 2026-07-15
 
-🔴 **CyberShield AI** - Threat Intelligence Dashboard
+🔴 **Bayesian Sentinel** - Threat Intelligence Dashboard

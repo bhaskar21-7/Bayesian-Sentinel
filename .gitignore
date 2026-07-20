@@ -34,3 +34,18 @@ Thumbs.db
 
 # Logs
 *.log
+# Runtime logs
+**/event_log.jsonl
+
+# Patch files
+*.patch
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Model artifacts
+**/models/*.pkl
+
+# Generated datasets
+**/data/*.csv
