@@ -35,17 +35,17 @@ from dashboard_common import get_dataset, PAGE_ICON, RISK_COLORS
 # ============================================================================
 
 ST_THEME = {
-    "primaryColor": "#00D9FF",  # Cyan
-    "backgroundColor": "#0D1117",  # Dark navy
-    "secondaryBackgroundColor": "#161B22",  # Slightly lighter
-    "textColor": "#E6EDF3",  # Light text
+    "primaryColor": "#0969DA",  # Blue
+    "backgroundColor": "#FFFFFF",  # White
+    "secondaryBackgroundColor": "#F6F8FA",  # Light gray
+    "textColor": "#1F2328",  # Dark text
     "font": "sans serif",
 }
 
-COLOR_DARK_BG = "#0D1117"
-COLOR_CARD_BG = "#161B22"
-COLOR_BORDER = "#30363D"
-COLOR_PRIMARY = "#00D9FF"  # Cyan
+COLOR_DARK_BG = "#FFFFFF"
+COLOR_CARD_BG = "#FFFFFF"
+COLOR_BORDER = "#D0D7DE"
+COLOR_PRIMARY = "#0969DA"  # Blue
 COLOR_ACCENT = "#0969DA"  # Blue
 COLOR_DANGER = "#DA3633"  # Red
 COLOR_WARNING = "#D29922"  # Orange
@@ -88,76 +88,75 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-        /* Global dark theme */
+        /* Light theme — consistent with Explainability/Threat Explorer pages,
+           which use Streamlit's default light background. Accent colors stay
+           distinct (blue/cyan) so this doesn't read as "just default Streamlit". */
         :root {
-            --dark-bg: #0D1117;
-            --card-bg: #161B22;
-            --border: #30363D;
-            --primary: #00D9FF;
+            --page-bg: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --border: #D0D7DE;
+            --primary: #0969DA;
             --accent: #0969DA;
             --danger: #DA3633;
+            --text-main: #1F2328;
+            --text-muted: #57606A;
         }
         
-        /* Global dark theme — targets Streamlit's actual app container.
-           Plain `body {}` doesn't reliably reach content in modern Streamlit
-           since the app renders inside [data-testid="stAppViewContainer"];
-           config.toml sets the base theme, this is a defensive backup. */
         [data-testid="stAppViewContainer"], [data-testid="stHeader"], .main {
-            background-color: var(--dark-bg);
-            color: #E6EDF3;
+            background-color: var(--page-bg);
+            color: var(--text-main);
         }
         
         body {
-            background-color: var(--dark-bg);
-            color: #E6EDF3;
+            background-color: var(--page-bg);
+            color: var(--text-main);
         }
         
-        /* Glassmorphism cards */
+        /* Cards — solid background + border/shadow instead of backdrop-filter
+           blur. Blur is GPU-expensive and was the main cause of scroll lag
+           when several cards render on screen at once; this keeps the
+           layered look without repainting a blur on every scroll frame. */
         .soc-card {
-            background: rgba(22, 27, 34, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(48, 54, 61, 0.5);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(31, 35, 40, 0.08);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         
         .soc-card:hover {
-            background: rgba(22, 27, 34, 0.9);
-            border-color: rgba(0, 217, 255, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 48px rgba(0, 217, 255, 0.1);
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(9, 105, 218, 0.1);
         }
         
         /* KPI Cards */
         .kpi-card {
-            background: linear-gradient(135deg, rgba(22, 27, 34, 0.8) 0%, rgba(22, 27, 34, 0.4) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 217, 255, 0.2);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px;
             text-align: center;
-            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(31, 35, 40, 0.08);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         
         .kpi-card:hover {
-            border-color: rgba(0, 217, 255, 0.5);
-            box-shadow: 0 0 20px rgba(0, 217, 255, 0.15);
-            transform: scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(9, 105, 218, 0.12);
         }
         
         .kpi-value {
             font-size: 32px;
             font-weight: 700;
-            color: #00D9FF;
+            color: var(--accent);
             margin: 10px 0;
         }
         
         .kpi-label {
             font-size: 12px;
-            color: #8b949e;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -175,7 +174,7 @@ st.markdown(
            which happened because they had no defined box before. */
         .status-block {
             text-align: center;
-            color: #8b949e;
+            color: var(--text-muted);
             font-size: 12px;
             white-space: nowrap;
             min-width: 110px;
@@ -186,11 +185,11 @@ st.markdown(
             display: block;
             letter-spacing: 1px;
             margin-bottom: 4px;
+            color: var(--text-main);
         }
         .soc-nav {
-            background: rgba(22, 27, 34, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(48, 54, 61, 0.8);
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
             padding: 20px 40px;
             display: flex;
             justify-content: space-between;
@@ -202,7 +201,7 @@ st.markdown(
         .soc-title {
             font-size: 28px;
             font-weight: 700;
-            color: #00D9FF;
+            color: var(--accent);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -214,47 +213,41 @@ st.markdown(
             height: 10px;
             border-radius: 50%;
             margin-right: 8px;
-            animation: pulse 2s infinite;
         }
         
         .status-healthy { background-color: #1a7f37; }
         .status-warning { background-color: #d29922; }
         .status-critical { background-color: #da3633; }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
         /* Alert table styling */
         .alert-row-critical {
-            background-color: rgba(218, 54, 51, 0.1);
+            background-color: rgba(218, 54, 51, 0.08);
             border-left: 3px solid #DA3633;
         }
         
         .alert-row-high {
-            background-color: rgba(210, 153, 34, 0.1);
+            background-color: rgba(210, 153, 34, 0.08);
             border-left: 3px solid #D29922;
         }
         
         .alert-row-medium {
-            background-color: rgba(9, 105, 218, 0.1);
+            background-color: rgba(9, 105, 218, 0.08);
             border-left: 3px solid #0969DA;
         }
         
         .alert-row-low {
-            background-color: rgba(26, 127, 55, 0.1);
+            background-color: rgba(26, 127, 55, 0.08);
             border-left: 3px solid #1a7f37;
         }
         
         /* Headings */
         h1, h2, h3 {
-            color: #E6EDF3;
+            color: var(--text-main);
             letter-spacing: -0.5px;
         }
         
         h2 {
-            border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+            border-bottom: 1px solid var(--border);
             padding-bottom: 16px;
             margin-bottom: 24px;
             font-size: 20px;
@@ -264,7 +257,7 @@ st.markdown(
         /* Divider */
         .divider {
             height: 1px;
-            background: rgba(48, 54, 61, 0.5);
+            background: var(--border);
             margin: 32px 0;
         }
         
@@ -446,7 +439,7 @@ with left_col:
     
     # Add individual events as scatter
     fig_timeline.add_trace(
-        go.Scatter(
+        go.Scattergl(
             x=timeline_df["timestamp"],
             y=timeline_df["final_risk_probability"] * 100,
             mode="markers",
@@ -464,23 +457,23 @@ with left_col:
     
     # Add rolling average
     fig_timeline.add_trace(
-        go.Scatter(
+        go.Scattergl(
             x=timeline_df["timestamp"],
             y=timeline_df["rolling_risk"] * 100,
             mode="lines",
             name="Trend (20-event MA)",
-            line=dict(color="#00D9FF", width=3, dash="dash"),
+            line=dict(color="#0969DA", width=3, dash="dash"),
             hovertemplate="Trend: %{y:.1f}%<br>Time: %{x}<extra></extra>",
         )
     )
     
     fig_timeline.update_layout(
-        template="plotly_dark",
+        template="plotly_white",
         hovermode="x unified",
         height=400,
         margin=dict(l=60, r=20, t=20, b=60),
-        plot_bgcolor="rgba(22, 27, 34, 0.5)",
-        paper_bgcolor="rgba(22, 27, 34, 0.3)",
+        plot_bgcolor="rgba(255, 255, 255, 1)",
+        paper_bgcolor="rgba(255, 255, 255, 1)",
         xaxis=dict(
             showgrid=True,
             gridwidth=1,
@@ -494,7 +487,7 @@ with left_col:
             zeroline=False,
             title="Risk Score (%)",
         ),
-        legend=dict(x=0, y=1, bgcolor="rgba(22, 27, 34, 0.7)", bordercolor="rgba(0, 217, 255, 0.3)", borderwidth=1),
+        legend=dict(x=0, y=1, bgcolor="rgba(255, 255, 255, 0.9)", bordercolor="rgba(9, 105, 218, 0.3)", borderwidth=1),
     )
     
     st.plotly_chart(fig_timeline, use_container_width=True, key="threat_timeline")
@@ -514,18 +507,19 @@ with right_col:
                 marker=dict(colors=[RISK_COLORS_SIEM[cat] for cat in risk_counts.index]),
                 textinfo="label+percent",
                 textfont=dict(color="#E6EDF3", size=12),
+                outsidetextfont=dict(color="#1F2328", size=12),
                 hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>",
             )
         ]
     )
     
     fig_donut.update_layout(
-        template="plotly_dark",
+        template="plotly_white",
         height=400,
         margin=dict(l=20, r=20, t=20, b=20),
-        plot_bgcolor="rgba(22, 27, 34, 0.5)",
-        paper_bgcolor="rgba(22, 27, 34, 0.3)",
-        font=dict(color="#E6EDF3"),
+        plot_bgcolor="rgba(255, 255, 255, 1)",
+        paper_bgcolor="rgba(255, 255, 255, 1)",
+        font=dict(color="#1F2328"),
     )
     
     st.plotly_chart(fig_donut, use_container_width=True, key="risk_distribution")
@@ -556,23 +550,32 @@ fig_heatmap = go.Figure(
         z=heatmap_pivot.values,
         x=heatmap_pivot.columns,
         y=heatmap_pivot.index,
-        colorscale=[
-            [0, "#0D1117"],
-            [0.25, "#1a7f37"],
-            [0.5, "#d29922"],
-            [1, "#da3633"],
-        ],
-        hovertemplate="<b>%{y}</b><br>Day: %{x}<br>Attacks: %{z}<extra></extra>",
-        colorbar=dict(title="Attack Count", thickness=15, len=0.7),
+        # Single-hue sequential scale (light -> dark blue) reads intuitively
+        # as "more/less" — the old 4-stop black->green->orange->red scale
+        # had no consistent ordering and looked alarming for what's actually
+        # near-uniform data.
+        colorscale="Blues",
+        # zmin=0 anchors the color scale to a real floor instead of
+        # auto-stretching color across just the actual min/max (170-222).
+        # That auto-stretch was exaggerating a ~24% spread into what looked
+        # like a dramatic cliff from "critical" to "nothing" — misleading,
+        # since these channels are actually close to evenly distributed.
+        zmin=0,
+        zmax=float(heatmap_pivot.values.max()) * 1.15,
+        text=heatmap_pivot.values,
+        texttemplate="%{text:.0f}",
+        textfont=dict(size=12, color="#FFFFFF"),
+        hovertemplate="<b>%{y}</b><br>Day: %{x}<br>Events: %{z}<extra></extra>",
+        colorbar=dict(title="Event Count", thickness=15, len=0.7),
     )
 )
 
 fig_heatmap.update_layout(
-    template="plotly_dark",
+    template="plotly_white",
     height=320,
     margin=dict(l=120, r=20, t=20, b=60),
-    plot_bgcolor="rgba(22, 27, 34, 0.5)",
-    paper_bgcolor="rgba(22, 27, 34, 0.3)",
+    plot_bgcolor="rgba(255, 255, 255, 1)",
+    paper_bgcolor="rgba(255, 255, 255, 1)",
     xaxis_title="Day of Week",
     yaxis_title="Channel",
 )
@@ -657,9 +660,9 @@ fig_table = go.Figure(
                 values=[
                     f"<b>{col}</b>" for col in alerts_table_data.columns
                 ],
-                fill_color="rgba(0, 217, 255, 0.2)",
+                fill_color="rgba(9, 105, 218, 0.12)",
                 align="left",
-                font=dict(color="#00D9FF", size=12),
+                font=dict(color="#0969DA", size=12),
                 height=28,
             ),
             cells=dict(
@@ -676,24 +679,32 @@ fig_table = go.Figure(
                         for risk in alerts_table_data["Risk"]
                     ]
                     if col == "Risk"
-                    else "rgba(22, 27, 34, 0.5)"
+                    else "rgba(246, 248, 250, 1)"
                     for col in alerts_table_data.columns
                 ],
                 align="left",
-                font=dict(color="#E6EDF3", size=11),
+                font=dict(color="#1F2328", size=11),
                 height=28,
-                line=dict(color="rgba(48, 54, 61, 0.3)", width=0.5),
+                line=dict(color="rgba(208, 215, 222, 0.6)", width=0.5),
             ),
         )
     ]
 )
 
+ROW_HEIGHT = 28
+HEADER_HEIGHT = 28
+TABLE_PADDING = 40
+# Fixed height was smaller than the actual content (30 rows x 28px + header),
+# which forced Plotly to compress rows to fit — that compression is what
+# caused the header to visually overlap the first data row.
+table_height = HEADER_HEIGHT + (len(alerts_table_data) * ROW_HEIGHT) + TABLE_PADDING
+
 fig_table.update_layout(
-    template="plotly_dark",
-    height=500,
+    template="plotly_white",
+    height=table_height,
     margin=dict(l=20, r=20, t=20, b=20),
-    plot_bgcolor="rgba(22, 27, 34, 0.3)",
-    paper_bgcolor="rgba(22, 27, 34, 0.3)",
+    plot_bgcolor="rgba(255, 255, 255, 1)",
+    paper_bgcolor="rgba(255, 255, 255, 1)",
 )
 
 st.plotly_chart(fig_table, use_container_width=True, key="alerts_table")

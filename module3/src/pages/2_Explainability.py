@@ -82,7 +82,7 @@ with col2:
         shap_vals = xe._shap_values[:, idx]
         norm_vals = (vals - vals.min()) / (vals.max() - vals.min() + 1e-9)
         jitter = rng.uniform(-0.35, 0.35, size=len(shap_vals))
-        fig_summary.add_trace(go.Scatter(
+        fig_summary.add_trace(go.Scattergl(
             x=shap_vals, y=[i + j for j in jitter],
             mode="markers",
             marker=dict(
@@ -211,6 +211,7 @@ for feat, title, col in influence_specs:
             dep, x="value", y="shap_value", color=dep["is_attack"].map({0: "Legitimate", 1: "Attack"}),
             color_discrete_map={"Legitimate": "#2ECC71", "Attack": "#E74C3C"},
             opacity=0.5, labels={"value": feat, "shap_value": "SHAP value", "color": ""},
+            render_mode="webgl",
         )
         fig_dep.update_traces(marker=dict(size=5))
         fig_dep.update_layout(height=340, margin=dict(l=20, r=20, t=20, b=20), legend=dict(orientation="h", y=1.15))
