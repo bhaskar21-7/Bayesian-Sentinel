@@ -38,7 +38,33 @@ echo_warning() {
 
 # Check Python version
 echo_header "Checking environment"
-python --version
+python3 --version 2>/dev/null || python --version
+
+# Determine python command (prefer python3 on Linux/Mac)
+if command -v python3 &>/dev/null; then
+    PYTHON=python3
+else
+    PYTHON=python
+fi
+
+# Create and activate a virtual environment to avoid PEP 668
+# "externally-managed-environment" errors on modern Debian/Ubuntu/WSL.
+VENV_DIR="$BASE_DIR/.venv"
+if [ ! -d "$VENV_DIR" ]; then
+    echo_warning "No virtual environment found — creating one at $VENV_DIR"
+    $PYTHON -m venv "$VENV_DIR" || {
+        echo_error "Failed to create virtual environment. Install python3-venv (e.g. sudo apt install python3-venv) and retry."
+        exit 1
+    }
+    echo_success "Virtual environment created"
+else
+    echo_success "Using existing virtual environment at $VENV_DIR"
+fi
+
+# Activate the venv (works in bash/zsh)
+# shellcheck disable=SC1091
+source "$VENV_DIR/bin/activate"
+echo_success "Virtual environment activated ($(which python))"
 
 # Install dependencies
 echo_header "Installing dependencies"

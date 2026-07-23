@@ -28,6 +28,21 @@ hackathons alike.
 
 ---
 
+## 📸 Dashboard Screenshots
+
+| SOC Dashboard Overview | Explainability (SHAP / LIME) | Threat Explorer & Attack Heatmap |
+|:---:|:---:|:---:|
+| ![SOC Dashboard](docs/screenshots/dashboard.png) | ![Explainability](docs/screenshots/explainability_shap.png) | ![Attack Heatmap](docs/screenshots/attack_heatmap.png) |
+
+> **🔬 Engineering rigor note:** Both modules include deliberate stress tests
+> ([module1/src/stress_test.py](./module1/src/stress_test.py),
+> [module2/src/stress_test.py](./module2/src/stress_test.py)) that evaluate
+> against a harder holdout distribution — not the standard train/test split.
+> Module 1's stress test exposes a genuine failure mode (AUC drops to 0.18
+> on stealthy attacks), which is documented honestly rather than hidden.
+
+---
+
 ## 🎯 What This Platform Does
 
 **Four integrated modules, each production-quality:**
@@ -365,6 +380,8 @@ For detailed documentation on each module:
 
 ## 📝 License & Citation
 
+This project is licensed under the **MIT License** — see [LICENSE](./LICENSE) for details.
+
 This platform was built for the **Maverick Effect AI Challenge 2026** as a demonstration of production-quality ML engineering practices applied to cybersecurity threat detection.
 
 **Core dependencies:**
@@ -403,4 +420,4 @@ A: Module 3 verifies the SHAP additivity property numerically (base_value + sum(
 
 **Built with ❤️ for explainable, production-quality AI in cybersecurity.**
 
-Last updated: 2026-07-15
+Last updated: 2026-07-23

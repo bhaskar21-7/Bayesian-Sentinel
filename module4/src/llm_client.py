@@ -68,6 +68,7 @@ prefixed so it can never be mistaken for real model output downstream.
 """
 
 import os
+import time
 
 import requests
 
@@ -97,6 +98,12 @@ THINKING_LEVEL = "low"  # "low" | "medium" | "high" — low is enough for short 
 REQUEST_TIMEOUT_SECONDS = 60  # raised from 30s: thinking passes can be slow even at "low"
 MOCK_PREFIX = "[MOCK LLM OUTPUT — SOC_LLM_MOCK_MODE=1, NOT A REAL MODEL RESPONSE] "
 
+# Retry settings for transient API failures (timeouts, 429/503).
+# Auth errors (401/403) are NOT retried — fail fast with the existing clear message.
+RETRY_MAX_ATTEMPTS = 3
+RETRY_BACKOFF_SECONDS = [1, 2, 4]  # exponential: 1s, 2s, 4s
+RETRIABLE_STATUS_CODES = {429, 503}
+
 
 def _mock_mode_enabled(explicit: bool = None) -> bool:
     if explicit is not None:
@@ -104,10 +111,21 @@ def _mock_mode_enabled(explicit: bool = None) -> bool:
     return os.environ.get("SOC_LLM_MOCK_MODE", "").strip() in ("1", "true", "True")
 
 
+def _is_retriable(exc: Exception) -> bool:
+    """Return True for transient failures worth retrying (timeouts, 429/503).
+    Auth errors (401/403) and other client errors are NOT retriable."""
+    if isinstance(exc, (requests.exceptions.Timeout, requests.exceptions.ConnectionError)):
+        return True
+    if isinstance(exc, requests.exceptions.HTTPError) and exc.response is not None:
+        return exc.response.status_code in RETRIABLE_STATUS_CODES
+    return False
+
+
 def _call_one_model(prompt: str, system_prompt: str, max_tokens: int, model: str, api_key: str) -> str:
-    """Single attempt against one model. Raises on any failure (network,
-    404/retired model, blocked prompt, empty response) — caller decides
-    whether to fall back to the next model or give up."""
+    """Single attempt against one model, with retry/backoff for transient
+    failures (timeouts, 429, 503). Auth errors (401/403) fail fast.
+    Raises on any non-retriable failure — caller decides whether to fall
+    back to the next model or give up."""
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "generationConfig": {
@@ -119,14 +137,39 @@ def _call_one_model(prompt: str, system_prompt: str, max_tokens: int, model: str
         payload["system_instruction"] = {"parts": [{"text": system_prompt}]}
 
     url = GEMINI_API_URL_TEMPLATE.format(model=model)
+    headers = {"x-goog-api-key": api_key, "Content-Type": "application/json"}
 
-    response = requests.post(
-        url,
-        headers={"x-goog-api-key": api_key, "Content-Type": "application/json"},
-        json=payload,
-        timeout=REQUEST_TIMEOUT_SECONDS,
-    )
-    response.raise_for_status()
+    # Retry loop for transient failures only
+    last_exc = None
+    for attempt in range(RETRY_MAX_ATTEMPTS):
+        try:
+            response = requests.post(
+                url, headers=headers, json=payload,
+                timeout=REQUEST_TIMEOUT_SECONDS,
+            )
+            response.raise_for_status()
+            break  # success — proceed to parse
+        except requests.exceptions.HTTPError as e:
+            if not _is_retriable(e):
+                raise  # 401/403/404 etc — fail fast, no retry
+            last_exc = e
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+            last_exc = e
+
+        # Transient failure — backoff and retry
+        wait = RETRY_BACKOFF_SECONDS[min(attempt, len(RETRY_BACKOFF_SECONDS) - 1)]
+        logger.warning(
+            f"Transient error on attempt {attempt + 1}/{RETRY_MAX_ATTEMPTS} "
+            f"for model '{model}': {last_exc}. Retrying in {wait}s..."
+        )
+        time.sleep(wait)
+    else:
+        # All retry attempts exhausted
+        raise RuntimeError(
+            f"All {RETRY_MAX_ATTEMPTS} retry attempts failed for model '{model}'. "
+            f"Last error: {last_exc}"
+        ) from last_exc
+
     data = response.json()
 
     block_reason = data.get("promptFeedback", {}).get("blockReason")

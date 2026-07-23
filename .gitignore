@@ -9,6 +9,10 @@ __pycache__/
 venv/
 env/
 
+# Environment secrets (only .env.example should be committed)
+.env
+**/.env
+
 # VS Code
 .vscode/
 
