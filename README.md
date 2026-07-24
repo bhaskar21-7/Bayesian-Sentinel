@@ -499,4 +499,4 @@ A: Module 3 verifies the SHAP additivity property numerically (base_value + sum(
 
 **Built with ❤️ for explainable, production-quality AI in cybersecurity.**
 
-Last updated: 2026-07-23
+Last updated: 2026-07-24
