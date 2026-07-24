@@ -30,9 +30,36 @@ hackathons alike.
 
 ## 📸 Dashboard Screenshots
 
-| SOC Dashboard Overview | Explainability (SHAP / LIME) | Threat Explorer & Attack Heatmap |
-|:---:|:---:|:---:|
-| ![SOC Dashboard](docs/screenshots/dashboard.png) | ![Explainability](docs/screenshots/explainability_shap.png) | ![Attack Heatmap](docs/screenshots/attack_heatmap.png) |
+**SOC Dashboard — Threat Timeline & Risk Distribution**
+![Dashboard Overview](docs/screenshots/dashboard_overview.png)
+Live event stream (red = critical, blue = 20-event moving average) alongside
+the overall risk breakdown across the current dataset.
+
+**Explainability — Global SHAP Feature Importance**
+![Explainability Summary](docs/screenshots/explainability_summary.png)
+Which features drive the surrogate model's predictions across all 3,000
+events, plus a per-feature SHAP summary showing direction and magnitude of
+influence — not just a ranked list, the actual distribution.
+
+**Explainability — Per-Event Breakdown (SHAP Waterfall + LIME)**
+![Per-Event Explanation](docs/screenshots/explainability_per_event.png)
+This is the actual differentiator: for any single flagged event, a SHAP
+waterfall shows exactly which network features pushed the risk score up or
+down, and LIME independently explains Module 2's real phishing classifier
+on the raw text — two different explanation methods, on two different real
+models, for the same event.
+
+**Threat Explorer — Full Dataset, Filterable**
+![Threat Explorer](docs/screenshots/threat_explorer.png)
+Every one of the 3,000 underlying events, filterable by risk category,
+channel, protocol, and country — for an analyst who needs to go past the
+dashboard summary and inspect raw data.
+
+**Attack Heatmap — Real Channel Distribution**
+![Attack Heatmap](docs/screenshots/attack_heatmap.png)
+Event volume by channel and day, built from the real `channel` field in the
+dataset (not a placeholder) — counts are printed directly on each cell so
+nothing is left to color-guessing.
 
 > **🔬 Engineering rigor note:** Both modules include deliberate stress tests
 > ([module1/src/stress_test.py](./module1/src/stress_test.py),
