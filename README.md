@@ -28,20 +28,28 @@ hackathons alike.
 
 ---
 
-## 📸 Dashboard Screenshots
+## 📸 Screenshots
 
-**SOC Dashboard — Threat Timeline & Risk Distribution**
+### Landing Page
+![Landing Page](docs/screenshots/landing_page.png)
+The actual pitch, in one line: *"Your tools already saw the attack. They
+just never told each other."* — the alert-fatigue problem this platform
+exists to solve.
+
+### SOC Dashboard
+**Threat Timeline & Risk Distribution**
 ![Dashboard Overview](docs/screenshots/dashboard_overview.png)
 Live event stream (red = critical, blue = 20-event moving average) alongside
 the overall risk breakdown across the current dataset.
 
-**Explainability — Global SHAP Feature Importance**
+### Explainability
+**Global SHAP Feature Importance**
 ![Explainability Summary](docs/screenshots/explainability_summary.png)
 Which features drive the surrogate model's predictions across all 3,000
 events, plus a per-feature SHAP summary showing direction and magnitude of
 influence — not just a ranked list, the actual distribution.
 
-**Explainability — Per-Event Breakdown (SHAP Waterfall + LIME)**
+**Per-Event Breakdown (SHAP Waterfall + LIME)**
 ![Per-Event Explanation](docs/screenshots/explainability_per_event.png)
 This is the actual differentiator: for any single flagged event, a SHAP
 waterfall shows exactly which network features pushed the risk score up or
@@ -49,13 +57,32 @@ down, and LIME independently explains Module 2's real phishing classifier
 on the raw text — two different explanation methods, on two different real
 models, for the same event.
 
-**Threat Explorer — Full Dataset, Filterable**
+### Incident Reports (Module 4 — LLM-Gated Playbooks)
+**Report Header — Risk, Confidence, and Provenance**
+![Incident Report Summary](docs/screenshots/incident_report_summary.png)
+Every report states *why* it fired (`final_risk_probability` weighted with
+cross-signal agreement between the two independent models) and includes an
+explicit callout: which sections below are LLM-generated (Google Gemini)
+versus fixed, deterministic template — so nothing here is presented as AI
+output unless it actually is.
+
+**Evidence Sections — Labeled by Source**
+![Incident Report Evidence](docs/screenshots/incident_report_evidence.png)
+Linux/Windows commands and firewall rules are template-derived; YARA/Snort/
+Sigma rules are syntax-validated against real parsers, not just generated
+text; CVE candidates are explicitly marked illustrative-only rather than
+implied to be a verified match. Most of a "generated" incident report is
+deliberately *not* generated — only the narrative sections are, and those
+are labeled as such.
+
+### Threat Explorer & Attack Heatmap
+**Full Dataset, Filterable**
 ![Threat Explorer](docs/screenshots/threat_explorer.png)
 Every one of the 3,000 underlying events, filterable by risk category,
 channel, protocol, and country — for an analyst who needs to go past the
 dashboard summary and inspect raw data.
 
-**Attack Heatmap — Real Channel Distribution**
+**Real Channel Distribution**
 ![Attack Heatmap](docs/screenshots/attack_heatmap.png)
 Event volume by channel and day, built from the real `channel` field in the
 dataset (not a placeholder) — counts are printed directly on each cell so
