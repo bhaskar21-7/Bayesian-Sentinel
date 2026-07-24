@@ -185,6 +185,11 @@ No environment variables or manual file juggling required.
 
 ### Manual Setup (if you prefer step-by-step)
 
+One command per line on purpose — `&&` chains are easy to mis-copy, and
+`&&` doesn't work at all in older Windows PowerShell (pre-7, still the
+default on plenty of machines). Every line below works unchanged in bash,
+Git Bash, cmd.exe, and PowerShell of any version.
+
 ```bash
 # 1. Install dependencies for each module
 pip install -r module1/requirements.txt
@@ -192,16 +197,30 @@ pip install -r module2/requirements.txt
 pip install -r module3/requirements.txt
 pip install -r module4/requirements.txt
 
-# 2. Train modules 1 & 2 (generates synthetic data if missing)
-cd module1/src && python train.py && cd ../..
-cd module2/src && python train.py && cd ../..
+# 2. Train Module 1 (generates synthetic data if missing)
+cd module1/src
+python train.py
+cd ../..
 
-# 3. Build module 3's unified dataset + launch dashboard
-cd module3/src && python build_dataset.py && cd ..
+# 3. Train Module 2
+cd module2/src
+python train.py
+cd ../..
+
+# 4. Build Module 3's unified dataset
+cd module3/src
+python build_dataset.py
+
+# 5. Launch the dashboard (still in module3/src from step 4)
 streamlit run app.py
+```
 
-# 4. Run the orchestrator (with LLM gating)
-cd module4/src && python main.py --batch 10 --mock-llm
+Then, in a **separate terminal**, from the repo root:
+
+```bash
+# 6. Run the orchestrator (with LLM gating)
+cd module4/src
+python main.py --batch 10 --mock-llm
 ```
 
 ---
@@ -290,11 +309,33 @@ SHAP has no native support for OneClassSVM and partial/version-fragile support f
 ### To Test Everything Yourself
 
 ```bash
-# Run all module tests independently
-cd module1/src && python train.py && python predict.py && python cross_validate.py && python stress_test.py && cd ../..
-cd module2/src && python train.py && python evaluate_bayesian_layer.py && python cross_validate.py && python stress_test.py && cd ../..
-cd module3/src && python build_dataset.py && cd .. && streamlit run app.py &
-cd module4/src && python main.py --batch 5 --mock-llm
+# Module 1 — full verification chain
+cd module1/src
+python train.py
+python predict.py
+python cross_validate.py
+python stress_test.py
+cd ../..
+
+# Module 2 — full verification chain
+cd module2/src
+python train.py
+python evaluate_bayesian_layer.py
+python cross_validate.py
+python stress_test.py
+cd ../..
+
+# Module 3 — build dataset, then launch dashboard in its own terminal
+cd module3/src
+python build_dataset.py
+streamlit run app.py
+```
+
+Then, in a **separate terminal**, from the repo root:
+
+```bash
+cd module4/src
+python main.py --batch 5 --mock-llm
 ```
 
 ---
@@ -307,14 +348,25 @@ cd module4/src && python main.py --batch 5 --mock-llm
 # Option 1: Copy .env.example to .env and fill in your key
 cp module4/.env.example module4/.env
 # Get a free key at https://aistudio.google.com/apikey (no credit card needed)
-export GEMINI_API_KEY=AIza...
+# Then edit module4/.env and set GEMINI_API_KEY=AIza... directly in the file
 
-# Option 2: Set directly in shell
+# Option 2: Set the environment variable directly in your shell
+# bash / Git Bash / macOS / Linux:
 export GEMINI_API_KEY=AIza...
 export SOC_LLM_MOCK_MODE=1  # for development/testing
 
-# Option 3: Always use mock mode (no API key needed)
-cd module4/src && python main.py --batch 10 --mock-llm
+# Windows cmd.exe:
+set GEMINI_API_KEY=AIza...
+set SOC_LLM_MOCK_MODE=1
+
+# Windows PowerShell:
+$env:GEMINI_API_KEY = "AIza..."
+$env:SOC_LLM_MOCK_MODE = "1"
+
+# Option 3: Always use mock mode (no API key needed) — works identically
+# in every shell since it's just a Python CLI flag, not an env var
+cd module4/src
+python main.py --batch 10 --mock-llm
 ```
 
 When mock mode is on, all LLM output is prefixed `[MOCK LLM OUTPUT ...]` so it can never be mistaken for real model output downstream.
